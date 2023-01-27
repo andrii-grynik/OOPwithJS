@@ -1,44 +1,71 @@
 class Vampire {
-  constructor(name, yearConverted) {
-    this.name = name;
-    this.yearConverted = yearConverted;
-    this.offspring = [];
-    this.creator = null;
+  constructor (name, yearConverted) {
+    this.name = name
+    this.yearConverted = yearConverted
+    this.offspring = []
+    this.creator = null
   }
 
-  /** Simple tree methods **/
-
   // Adds the vampire as an offspring of this vampire
-  addOffspring(vampire) {
-
+  addOffspring (vampire) {
+    vampire.creator = this
+    this.offspring.push(vampire)
   }
 
   // Returns the total number of vampires created by that vampire
-  get numberOfOffspring() {
-
+  get numberOfOffspring () {
+    const vampFamSize = this.offspring.length
+    if (vampFamSize === undefined || vampFamSize === null) {
+      return 0
+    }
+    return vampFamSize
   }
 
   // Returns the number of vampires away from the original vampire this vampire is
-  get numberOfVampiresFromOriginal() {
+  get numberOfVampiresFromOriginal () {
+    let vampIndex = 0
+    let vampCursor = this.creator
 
+    while (vampCursor) {
+      vampIndex++
+      if (vampCursor.creator) { vampCursor = vampCursor.creator } else { return vampIndex }
+    }
+
+    return vampIndex
   }
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
-  isMoreSeniorThan(vampire) {
-
+  isMoreSeniorThan (vampire) {
+    return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal
   }
 
-  /** Stretch **/
+  // Returns the closest common ancestor of two vampires
+  closestCommonAncestor (vampire) {
+    let curr = this
+    let other = vampire
+    let currNumFromCreator = this.numberOfVampiresFromOriginal
+    let otherNumFromCreator = vampire.numberOfVampiresFromOriginal
 
-  // Returns the closest common ancestor of two vampires.
-  // The closest common anscestor should be the more senior vampire if a direct ancestor is used.
-  // For example:
-  // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
-  // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
-  closestCommonAncestor(vampire) {
-
+    if (!curr.creator || !other.creator) {
+      return !curr.creator ? curr : other
+    }
+    while (currNumFromCreator > otherNumFromCreator) {
+      currNumFromCreator -= 1
+      curr = curr.creator
+    }
+    while (otherNumFromCreator > currNumFromCreator) {
+      otherNumFromCreator -= 1
+      other = other.creator
+    }
+    if (curr.name === other.name) {
+      return curr
+    }
+    while (curr.creator.name !== other.creator.name) {
+      curr = curr.creator
+      other = other.creator
+    }
+    return curr.creator
   }
 }
 
-module.exports = Vampire;
-
+module.exports = Vampire
