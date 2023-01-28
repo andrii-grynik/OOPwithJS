@@ -67,6 +67,10 @@ class Vampire {
     return curr.creator
   }
   
+  
+   /** Tree traversal methods **/
+
+  // Returns the vampire object with that name, or null if no vampire exists with that name
     vampireWithName(name) {
     if (name === this.name){
        return this;
@@ -83,6 +87,7 @@ class Vampire {
     return null; 
   }
 
+  // Returns the total number of vampires that exist(Brings the spot light on them..... they HATE it!)
   get totalDescendents() {
     let vampSum = 0;
 
@@ -93,10 +98,11 @@ class Vampire {
     return vampSum;
   }
 
+ // Returns an array of all the vampires that were converted after 1980( The best possible Vamps out there!)
   get allMillennialVampires() {
     let millenialVamps = []; // 1
 
-    if (this.yearConverted > 1980) {
+    if (this.yearConverted > 1980 && this.yearConverted < 1997) {
       millenialVamps.push(this); // 2
     }
 
